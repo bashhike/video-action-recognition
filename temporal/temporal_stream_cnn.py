@@ -28,7 +28,7 @@ def get_activations(model, layer, X_batch):
 
 def getTrainData(chunk,nb_classes,img_rows,img_cols):
 	X_train,Y_train=tsd.stackOF(chunk,img_rows,img_cols,'train')
-	if (X_train!=None and Y_train!=None):
+	if (X_train is not None and Y_train is not None):
 		X_train/=255
 		# X_train=X_train-np.average(X_train)
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
@@ -115,7 +115,7 @@ def CNN():
 			print "Instance count :", instance_count
 			instance_count+=chunk_size
 			X_batch,Y_batch=getTrainData(chunk,nb_classes,img_rows,img_cols)
-			if (X_batch!=None and Y_batch!=None):
+			if (X_batch is not None and Y_batch is not None):
 				loss = model.fit(X_batch, Y_batch, verbose=1, batch_size=batch_size, nb_epoch=1)	
 				if instance_count%160==0:
 					loss = model.evaluate(X_test,Y_test,batch_size=batch_size,verbose=1)

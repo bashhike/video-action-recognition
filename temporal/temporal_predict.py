@@ -35,7 +35,7 @@ def get_activations(t_model, layer, X_batch):
 
 def t_getTrainData(chunk,nb_classes,img_rows,img_cols):
 	X_train,Y_train=tsd.stackOF(chunk,img_rows,img_cols,'test')
-	if (X_train!=None and Y_train!=None):
+	if (X_train is not None and Y_train is not None):
 		X_train/=255
 		# X_train=X_train-np.average(X_train)
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
@@ -112,7 +112,7 @@ def CNN():
 
 	for chunk in chunks(keys,chunk_size):
 		X_batch,Y_batch=t_getTrainData(chunk,nb_classes,img_rows,img_cols)
-		if (X_batch!=None and Y_batch!=None):
+		if (X_batch is not None and Y_batch is not None):
 				preds = t_model.predict_proba(X_batch)
 				print (preds)
 				print ('-'*40)
