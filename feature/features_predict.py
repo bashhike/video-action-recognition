@@ -12,6 +12,7 @@ from keras.optimizers import SGD
 from keras.utils import np_utils
 from six.moves import range
 from keras.layers.normalization import BatchNormalization
+from keras.regularizers import l2
 
 
 def totalCorrectPred(pred,y):
@@ -31,7 +32,7 @@ def compileFeaturesModel(nb_classes):
 	f_model = Sequential()
 	f_model.add(Dense(512, input_shape=(167,10)))
 	f_model.add(Flatten())
-	f_model.add(Dense(nb_classes))
+	f_model.add(Dense(nb_classes, W_regularizer=l2(0.01)))
 	f_model.add(Activation('softmax'))
 	
 
@@ -40,7 +41,7 @@ def compileFeaturesModel(nb_classes):
 	print 'Compiling f_model...'
 	gc.collect()
 	sgd = SGD(lr=0.0001, decay=1e-6, momentum=0.9, nesterov=True,clipnorm=0.1)
-	f_model.compile(loss='categorical_crossentropy',optimizer=sgd, metrics=['accuracy'])
+	f_model.compile(loss='hinge',optimizer=sgd, metrics=['accuracy'])
 	return f_model
 
 def f_getTrainData(chunk,nb_classes):
