@@ -18,7 +18,8 @@ def CreateDict(filename):
     return d
 
 # Produces optical flow images and creates a dictionary of the files present
-# with their respective classes
+# with their respective classes. Pass --test argument for preparing testing data
+# pickle file. 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == '--test':
         pickleFile = "../dataset/temporal_test_data.pickle"

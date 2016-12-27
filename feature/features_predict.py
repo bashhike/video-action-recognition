@@ -32,7 +32,8 @@ def compileFeaturesModel(nb_classes):
 	f_model = Sequential()
 	f_model.add(Dense(512, input_shape=(167,10)))
 	f_model.add(Flatten())
-	f_model.add(Dense(nb_classes, W_regularizer=l2(0.01)))
+	f_model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
+	f_model.add(Activation('linear'))
 	f_model.add(Activation('softmax'))
 	
 

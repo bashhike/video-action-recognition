@@ -25,7 +25,8 @@ def compileFeaturesModel(nb_classes):
 	f_model = Sequential()
 	f_model.add(Dense(512, input_shape=(167,10)))
 	f_model.add(Flatten())
-	f_model.add(Dense(nb_classes, W_regularizer=l2(0.01)))
+	f_model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
+	f_model.add(Activation('linear'))
 	f_model.add(Activation('softmax'))
 
 	print 'Compiling f_model...'
@@ -37,15 +38,13 @@ def compileFeaturesModel(nb_classes):
 def f_getTrainData(chunk,nb_classes):
 	X_train,Y_train = efp.stackExtractedFeatures(chunk,'train')
 	if (X_train is not None and Y_train is not None):
-		#X_train/=255
-		# X_train=X_train-np.average(X_train)
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
 	return (X_train,Y_train)
 
 def CNN():
 	batch_size= 10
 	nb_classes = 3
-	nb_epoch = 10
+	nb_epoch = 5
 	chunk_size=8
 	print 'Loading dictionary...'
 

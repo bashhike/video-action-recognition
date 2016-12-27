@@ -14,7 +14,7 @@ def stackOpticalFlow(blocks,temporal_train_data,img_rows,img_cols):
 			fx = []
 			fy = []
 			filename,blockNo=block.split('@')
-			path = './of_images/'+filename
+			path = '../dataset/of_images/'+filename
 			blockNo=int(blockNo)
 			if blockNo == 0: blockNo = 1
 			
@@ -60,8 +60,8 @@ def writeOpticalFlow(path,filename,w,h,c):
 		frame1 = cv2.resize(frame1, (w,h))
 		prvs = cv2.cvtColor(frame1,cv2.COLOR_BGR2GRAY)
 
-		if not os.path.isdir("of_images"): os.mkdir("of_images")
-		folder = './of_images'+'/'+filename+'/'
+		if not os.path.isdir("../dataset/of_images"): os.mkdir("of_images")
+		folder = '../dataset/of_images'+'/'+filename+'/'
 		dir = os.path.dirname(folder)
 		os.mkdir(dir)
 
