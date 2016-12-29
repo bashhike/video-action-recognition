@@ -28,9 +28,9 @@ def chunks(l, n):
 		yield l[i:i+n]
 
 
-def compileFeaturesModel(nb_classes):
+def compileFeaturesModel(nb_classes,requiredLines):
 	f_model = Sequential()
-	f_model.add(Dense(512, input_shape=(167,10)))
+	f_model.add(Dense(512, input_shape=(167,requiredLines)))
 	f_model.add(Flatten())
 	f_model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
 	f_model.add(Activation('linear'))
@@ -45,8 +45,8 @@ def compileFeaturesModel(nb_classes):
 	f_model.compile(loss='hinge',optimizer=sgd, metrics=['accuracy'])
 	return f_model
 
-def f_getTrainData(chunk,nb_classes):
-	X_train,Y_train = efp.stackExtractedFeatures(chunk,'train')
+def f_getTrainData(chunk,nb_classes,requiredLines):
+	X_train,Y_train = efp.stackExtractedFeatures(chunk,'train',requiredLines)
 	if (X_train is not None and Y_train is not None):
 		#X_train/=255
 		# X_train=X_train-np.average(X_train)
@@ -58,6 +58,7 @@ def CNN():
 	nb_classes = 3
 	nb_epoch = 10
 	chunk_size=16
+	requiredLines = 1000
 	f_total_predictions = 0
 	f_correct_predictions = 0
 	print 'Loading dictionary...'
@@ -65,13 +66,13 @@ def CNN():
 	with open('../dataset/temporal_test_data.pickle','rb') as f1:
 		temporal_test_data=pickle.load(f1)
 
-	f_model = compileFeaturesModel(nb_classes)
+	f_model = compileFeaturesModel(nb_classes,requiredLines)
 
 	keys = temporal_test_data.keys()
 
 	instance_count=0
 	for chunk in chunks(keys,chunk_size):
-		X_batch,Y_batch=f_getTrainData(chunk,nb_classes)
+		X_batch,Y_batch=f_getTrainData(chunk,nb_classes,requiredLines)
 		if (X_batch is not None and Y_batch is not None):
 			preds = f_model.predict_proba(X_batch)
 			print (preds)
