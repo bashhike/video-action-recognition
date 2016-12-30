@@ -28,8 +28,8 @@ def totalCorrectPred(pred,y):
 		if y[i,j] == 1: count += 1
 	return count
 
-def f_getTrainData(chunk,nb_classes):
-	X_train,Y_train = efp.stackExtractedFeatures(chunk,'test')
+def f_getTrainData(chunk,nb_classes,requiredLines):
+	X_train,Y_train = efp.stackExtractedFeatures(chunk,'test',requiredLines)
 	if (X_train is not None and Y_train is not None):
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
 	return (X_train,Y_train)
@@ -42,10 +42,10 @@ def t_getTrainData(chunk,nb_classes,img_rows,img_cols):
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
 	return (X_train,Y_train)
 
-def prepareFeaturesModel(nb_classes):
+def prepareFeaturesModel(nb_classes,requiredLines):
 	print "Preparing architecture of feature model..."
 	f_model = Sequential()
-	f_model.add(Dense(512, input_shape=(167,10)))
+	f_model.add(Dense(512, input_shape=(167,requiredLines)))
 	f_model.add(Flatten())
 	f_model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
 	f_model.add(Activation('linear'))
@@ -103,6 +103,7 @@ def CNN():
 	img_rows, img_cols = 150,150
 	img_channels = 2*input_frames
 	chunk_size=8
+	requiredLines = 1000
 	total_predictions = 0
 	correct_predictions = 0
 
@@ -111,7 +112,7 @@ def CNN():
 		temporal_test_data=pickle.load(f1)
 
 	t_model = prepareTemporalModel(img_channels,img_rows,img_cols,nb_classes)
-	f_model = prepareFeaturesModel(nb_classes)
+	f_model = prepareFeaturesModel(nb_classes,requiredLines)
 
 	merged_layer = Merge([t_model, f_model], mode='ave')
 	model = Sequential()
@@ -129,7 +130,7 @@ def CNN():
 	for chunk in chunks(keys,chunk_size):
 
 		tX_test,tY_test=t_getTrainData(chunk,nb_classes,img_rows,img_cols)
-		fX_test,fY_test=f_getTrainData(chunk,nb_classes)
+		fX_test,fY_test=f_getTrainData(chunk,nb_classes,requiredLines)
 		if (tX_test is not None and fX_test is not None):
 				preds = model.predict([tX_test,fX_test])
 				print (preds)

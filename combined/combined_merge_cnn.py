@@ -21,8 +21,8 @@ def chunks(l, n):
 	for i in xrange(0, len(l), n):
 		yield l[i:i+n]
 
-def f_getTrainData(chunk,nb_classes):
-	X_train,Y_train = efp.stackExtractedFeatures(chunk,'train')
+def f_getTrainData(chunk,nb_classes,requiredLines):
+	X_train,Y_train = efp.stackExtractedFeatures(chunk,'train',requiredLines)
 	if (X_train is not None and Y_train is not None):
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
 	return (X_train,Y_train)
@@ -35,10 +35,10 @@ def t_getTrainData(chunk,nb_classes,img_rows,img_cols):
 		Y_train=np_utils.to_categorical(Y_train,nb_classes)
 	return (X_train,Y_train)
 
-def prepareFeaturesModel(nb_classes):
+def prepareFeaturesModel(nb_classes,requiredLines):
 	print "Preparing architecture of feature model..."
 	f_model = Sequential()
-	f_model.add(Dense(512, input_shape=(167,10)))
+	f_model.add(Dense(512, input_shape=(167,requiredLines)))
 	f_model.add(Flatten())
 	f_model.add(Dense(512, W_regularizer=l2(0.1)))
 
@@ -94,13 +94,14 @@ def CNN():
 	img_rows, img_cols = 150,150
 	img_channels = 2*input_frames
 	chunk_size=8
+	requiredLines = 1000
 
 	print 'Loading dictionary...'
 	with open('../dataset/temporal_train_data.pickle','rb') as f1:
 		temporal_train_data=pickle.load(f1)
 
 	t_model = prepareTemporalModel(img_channels,img_rows,img_cols,nb_classes)
-	f_model = prepareFeaturesModel(nb_classes)
+	f_model = prepareFeaturesModel(nb_classes,requiredLines)
 
 	merged_layer = Merge([t_model, f_model], mode='ave')
 	model = Sequential()
@@ -131,13 +132,13 @@ def CNN():
 			if flag<1:
 				print("Preparing testing data...")
 				tX_test,tY_test=t_getTrainData(chunk,nb_classes,img_rows,img_cols)
-				fX_test,fY_test=f_getTrainData(chunk,nb_classes)
+				fX_test,fY_test=f_getTrainData(chunk,nb_classes,requiredLines)
 				flag += 1
 				continue
 			print "Instance count :", instance_count
 			instance_count+=chunk_size
 			tX_batch,tY_batch=t_getTrainData(chunk,nb_classes,img_rows,img_cols)
-			fX_batch,fY_batch=f_getTrainData(chunk,nb_classes)
+			fX_batch,fY_batch=f_getTrainData(chunk,nb_classes,requiredLines)
 
 			if (tX_batch is not None and fX_batch is not None):
 				loss = model.fit([tX_batch, fX_batch], tY_batch, verbose=1, batch_size=batch_size, nb_epoch=1)
