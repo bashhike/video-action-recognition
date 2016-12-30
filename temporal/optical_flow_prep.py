@@ -68,7 +68,7 @@ def writeOpticalFlow(path,filename,w,h,c):
 		while(1):
 			ret, frame2 = cap.read()
 
-			if frame2==None:
+			if frame2 is None:
 				break
 			count+=1
 			if count%5==0:
@@ -92,6 +92,5 @@ def writeOpticalFlow(path,filename,w,h,c):
 		cap.release()
 		cv2.destroyAllWindows()
 		return count
-	except Exception,e:
-		print e
+	except Exception as e:
 		return count
