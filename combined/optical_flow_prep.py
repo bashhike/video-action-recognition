@@ -60,7 +60,7 @@ def writeOpticalFlow(path,filename,w,h,c):
 		frame1 = cv2.resize(frame1, (w,h))
 		prvs = cv2.cvtColor(frame1,cv2.COLOR_BGR2GRAY)
 
-		if not os.path.isdir("../dataset/of_images"): os.mkdir("../dataset/of_images")
+		if not os.path.isdir("../dataset/of_images"): os.mkdir("of_images")
 		folder = '../dataset/of_images'+'/'+filename+'/'
 		dir = os.path.dirname(folder)
 		os.mkdir(dir)
@@ -68,7 +68,7 @@ def writeOpticalFlow(path,filename,w,h,c):
 		while(1):
 			ret, frame2 = cap.read()
 
-			if frame2==None:
+			if frame2 is None:
 				break
 			count+=1
 			if count%5==0:
@@ -92,6 +92,5 @@ def writeOpticalFlow(path,filename,w,h,c):
 		cap.release()
 		cv2.destroyAllWindows()
 		return count
-	except Exception,e:
-		print e
+	except Exception as e:
 		return count
