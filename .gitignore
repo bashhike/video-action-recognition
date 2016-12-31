@@ -1,5 +1,3 @@
-# Textfiles containing information about accuracy and prediction values. 
-*.txt
 # Compiled python files
 *.pyc
 # Optical flow images created from videos
