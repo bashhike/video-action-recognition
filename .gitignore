@@ -4,3 +4,6 @@
 *.jpg
 # Saved weights for models
 *.h5
+# Add compare and loss files.
+compare.*
+loss.*
