@@ -93,7 +93,7 @@ def compileTemporalModel(img_channels,img_rows,img_cols,nb_classes):
 def CNN():
 	input_frames=10
 	batch_size=8
-	nb_classes = 3
+	nb_classes = 101
 	nb_epoch = 10
 	img_rows, img_cols = 150,150
 	img_channels = 2*input_frames

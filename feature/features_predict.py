@@ -55,7 +55,7 @@ def f_getTrainData(chunk,nb_classes,requiredLines):
 
 def CNN():
 	batch_size= 8
-	nb_classes = 3
+	nb_classes = 101
 	nb_epoch = 10
 	chunk_size=16
 	requiredLines = 1000
